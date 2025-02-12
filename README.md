@@ -13,6 +13,7 @@ You are required to implement a **photo gallery** that populates with images tak
 1. **Camera Usage**  
    - Provide a button (e.g., “Start Camera”) that activates the user’s camera.  
    - Use the [MediaDevices getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) API (or an equivalent approach) to capture images.
+   - Once the camera is active, include an additional Take Photo button. This button should capture the current frame from the camera stream when clicked.
 
 2. **Photo Gallery**  
    - Display the captured photos in **thumbnails on the left side** of the page (or in a dedicated panel/section).
