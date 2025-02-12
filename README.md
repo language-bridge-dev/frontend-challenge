@@ -4,7 +4,7 @@ Welcome to this technical test! The main goal is to demonstrate your **frontend 
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b7dbdaa4-2973-4117-8c8b-7991150ab853" width="40%" />
-  <img src="https://github.com/user-attachments/assets/461c73b0-67f2-4ca4-a25e-32e2d085c2a6" width="40%" />
+  <img src="https://github.com/user-attachments/assets/d6a82be9-d416-483e-9293-06277d8f7acd" width="40%" />
 </p>
 
 ## Overview
