@@ -8,3 +8,7 @@ body {
   height: 100%;
   background-color: hsl(221, 39%, 11%);
 }
+p {
+  margin: 0;
+  padding: 0;
+}

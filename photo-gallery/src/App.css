@@ -2,7 +2,7 @@
   height: 100vh;
   max-width: 1440px;
   display: grid;
-  grid-template-columns: 1fr 0.25fr;
+  grid-template-columns: 1fr 0.3fr;
   gap: 2rem;
   margin: auto;
   overflow: hidden;
@@ -27,14 +27,38 @@ video {
   background-color: hsl(215, 28%, 17%);
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.image-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: min-content;
   gap: 0.5rem;
   padding: 0.5rem;
+  min-height: 70%;
   img {
     width: 100%;
     object-fit: cover;
+  }
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  background-color: hsl(217, 19%, 27%);
+  border-radius: 10px;
+  margin: 0.5rem;
+  padding: 1rem 1rem;
+}
+.pagination-buttons {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 80px;
+  svg {
+    cursor: pointer;
   }
 }
 .button-wrapper {
