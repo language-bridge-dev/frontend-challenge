@@ -2,7 +2,9 @@
 
 Welcome! 🎉 This is a photo gallery app where you can capture images using your camera and store them locally.
 
-<img src="./docs/screenshot.png" alt="Photo Gallery Preview" width="600px">
+<p align="center">
+  <img src="./docs/screenshot.png" alt="Photo Gallery Preview" width="500px">
+</p>
 
 ## 🛠️ Technologies Used
 
@@ -11,8 +13,6 @@ Welcome! 🎉 This is a photo gallery app where you can capture images using you
 - 📷 getUserMedia API for camera access
 - 💾 localStorage for photo persistence
 - 🏗️ Reusable components with React
-
----
 
 ## 🚀 Installation & Setup
 
@@ -45,8 +45,6 @@ pnpm dev
 
 The app will be available at `http://localhost:5173/` (or the port assigned by Vite).
 
----
-
 ## 📷 How to Use
 
 1️⃣ Click **"Start Camera"** to activate the camera.  
@@ -55,8 +53,6 @@ The app will be available at `http://localhost:5173/` (or the port assigned by V
 4️⃣ Click on a photo to **view it in full size**.  
 5️⃣ Use the **pagination controls** to navigate through stored images.  
 6️⃣ Photos persist after page reload, stored in **localStorage**.
-
----
 
 ## 🛠 Features
 
