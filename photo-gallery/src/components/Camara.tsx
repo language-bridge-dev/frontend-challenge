@@ -2,9 +2,10 @@ import { useRef, useState } from "react";
 import Button from "./Button";
 
 const Camara = () => {
-  const text = "Start camara";
   const [isCameraActive, setIsCameraActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const text = isCameraActive ? "Take Photo" : "Start Camara";
 
   const startCamera = async () => {
     setIsCameraActive(true);
@@ -19,13 +20,31 @@ const Camara = () => {
     }
   };
 
+  const takePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const context = canvasRef.current.getContext("2d");
+      if (context) {
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+        context.drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+        const imageUrl = canvasRef.current.toDataURL("image/png");
+      }
+    }
+  };
+
   return (
     <div className="camara-wrapper">
       {isCameraActive && (
         <video ref={videoRef} autoPlay width="100%" height="auto" />
       )}
-
-      <Button onClick={startCamera} text={text} />
+      <Button onClick={isCameraActive ? takePhoto : startCamera} text={text} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };
