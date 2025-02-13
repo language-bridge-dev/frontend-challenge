@@ -1,20 +1,61 @@
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import CameraCapture from './components/CameraCapture';
+import PhotoGallery from './components/PhotoGallery';
+import { useEffect, useState } from 'react';
+import { Photo } from '../types';
 
 function App() {
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const photosPerPage = 6;
+
+  const indexOfLastPhoto = currentPage * photosPerPage;
+  const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
+  const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const pageCount = Math.ceil(photos.length / photosPerPage);
+
+  const deletePhoto = (id: string) => {
+    const updatedPhotos = photos.filter((photo) => photo.id !== id);
+    setPhotos(updatedPhotos);
+    localStorage.setItem('photos', JSON.stringify(updatedPhotos));
+
+    const updatedPageCount = Math.ceil(updatedPhotos.length / photosPerPage);
+
+    if (currentPage > updatedPageCount) {
+      setCurrentPage(updatedPageCount);
+    }
+
+    if (updatedPhotos.length === 0) {
+      setCurrentPage(1);
+    }
+  };
+
+  useEffect(() => {
+    const storedPhotos = localStorage.getItem('photos');
+    if (storedPhotos) {
+      setPhotos(JSON.parse(storedPhotos));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (photos.length > 0) {
+      localStorage.setItem('photos', JSON.stringify(photos));
+    }
+  }, [photos]);
+
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Photo Gallery</h1>
-    </>
+    <div className="flex flex-wrap sm:flex-nowrap">
+      <PhotoGallery
+        photos={currentPhotos}
+        setPhotos={setPhotos}
+        paginate={paginate}
+        currentPage={currentPage}
+        pageCount={pageCount}
+        deletePhoto={deletePhoto}
+      />
+      <CameraCapture setPhotos={setPhotos} />
+    </div>
   );
 }
 
