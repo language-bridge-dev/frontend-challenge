@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
 import Button from "./Button";
+import { useDispatch } from "react-redux";
+import { addImageToGallery } from "../redux/slices/imageSlice";
 
 const Camara = () => {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const text = isCameraActive ? "Take Photo" : "Start Camara";
+  const dispatch = useDispatch();
 
   const startCamera = async () => {
     setIsCameraActive(true);
@@ -34,6 +37,7 @@ const Camara = () => {
           canvasRef.current.height
         );
         const imageUrl = canvasRef.current.toDataURL("image/png");
+        dispatch(addImageToGallery(imageUrl));
       }
     }
   };

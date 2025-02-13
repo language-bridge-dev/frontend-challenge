@@ -1,25 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export interface ImageState {
-  imgs: string[];
+export interface GalleryState {
+  images: string[];
 }
 
-const initialState: ImageState = {
-  imgs: [],
+const initialState: GalleryState = {
+  images: [],
 };
 
-export const imageSlice = createSlice({
+export const gallerySlice = createSlice({
   name: "images",
   initialState,
   reducers: {
     addImageToGallery: (state, action: PayloadAction<string>) => {
-      state.imgs.push(action.payload);
+      state.images = [...state.images, action.payload];
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addImageToGallery } = imageSlice.actions;
+export const { addImageToGallery } = gallerySlice.actions;
 
-export default imageSlice.reducer;
+export default gallerySlice.reducer;
