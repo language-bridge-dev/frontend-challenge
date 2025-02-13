@@ -45,9 +45,19 @@ const Camara = () => {
   return (
     <div className="camara-wrapper">
       {isCameraActive && (
-        <video ref={videoRef} autoPlay width="100%" height="auto" />
+        <video
+          aria-label="Camera preview"
+          ref={videoRef}
+          autoPlay
+          width="100%"
+          height="auto"
+        />
       )}
-      <Button onClick={isCameraActive ? takePhoto : startCamera} text={text} />
+      <Button
+        aria-pressed={isCameraActive}
+        onClick={isCameraActive ? takePhoto : startCamera}
+        text={text}
+      />
       <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );

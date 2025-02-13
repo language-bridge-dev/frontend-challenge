@@ -12,19 +12,16 @@ const Gallery = () => {
   const imagesPerPage = 8;
   const total =
     images.length === 0 ? 1 : Math.ceil(images.length / imagesPerPage);
-  let firstImg;
-  let lastImg;
 
   const getPage = (currentPage: number) => {
     const startIndex = (currentPage - 1) * imagesPerPage;
     const endIndex = startIndex + imagesPerPage;
-    const imgs = images.slice(startIndex, endIndex);
-    firstImg = startIndex + 1;
-    lastImg = startIndex + imgs.length;
-    return imgs;
+    return images.slice(startIndex, endIndex);
   };
 
   const renderedImages = getPage(currentPage);
+  const firstImg = (currentPage - 1) * imagesPerPage + 1;
+  const lastImg = Math.min(firstImg + renderedImages.length - 1, images.length);
   const changepage = (page: number) => {
     if (page >= 1 && page <= total) setCurrentPage(page);
   };
@@ -36,28 +33,34 @@ const Gallery = () => {
             <img
               className="img"
               src={img}
-              alt={"picture " + index}
+              alt={`Gallery image ${index + firstImg}`}
               key={index}
             />
           );
         })}
       </div>
-      <div className="pagination-wrapper">
+      <nav className="pagination-wrapper" aria-label="Image pagination">
         <p>{`Showing ${firstImg}-${lastImg} of ${images.length} photos`}</p>
         <div className="pagination-buttons">
-          <MdOutlineKeyboardArrowLeft
-            size={20}
+          <button
             type="button"
             onClick={() => changepage(currentPage - 1)}
-          />
+            disabled={currentPage === 1}
+            aria-label="Previous Page"
+          >
+            <MdOutlineKeyboardArrowLeft size={20} />
+          </button>
           <p>{currentPage + " / " + total}</p>
-          <MdOutlineKeyboardArrowRight
-            size={20}
+          <button
             type="button"
             onClick={() => changepage(currentPage + 1)}
-          />
+            disabled={currentPage === total}
+            aria-label="Next Page"
+          >
+            <MdOutlineKeyboardArrowRight size={20} />
+          </button>
         </div>
-      </div>
+      </nav>
     </div>
   );
 };
