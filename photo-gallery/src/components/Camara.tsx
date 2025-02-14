@@ -1,10 +1,15 @@
 import { useRef, useState } from "react";
-import Button from "./Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addImageToGallery } from "../redux/slices/imageSlice";
+import Button from "./Button";
+import { RootState } from "../redux/store";
 
 const Camara = () => {
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const imageToShow = useSelector(
+    (state: RootState) => state.gallery.imageToShow
+  );
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const text = isCameraActive ? "Take Photo" : "Start Camara";
@@ -43,22 +48,28 @@ const Camara = () => {
   };
 
   return (
-    <div className="camara-wrapper">
-      {isCameraActive && (
-        <video
-          aria-label="Camera preview"
-          ref={videoRef}
-          autoPlay
-          width="100%"
-          height="auto"
-        />
+    <div className="camara">
+      {imageToShow ? (
+        <img src={imageToShow} alt="" />
+      ) : (
+        <div className="video-wrapper">
+          {isCameraActive && (
+            <video
+              aria-label="Camera preview"
+              ref={videoRef}
+              autoPlay
+              width="100%"
+              height="auto"
+            />
+          )}
+          <Button
+            aria-pressed={isCameraActive}
+            onClick={isCameraActive ? takePhoto : startCamera}
+            text={text}
+          />
+          <canvas ref={canvasRef} style={{ display: "none" }} />
+        </div>
       )}
-      <Button
-        aria-pressed={isCameraActive}
-        onClick={isCameraActive ? takePhoto : startCamera}
-        text={text}
-      />
-      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };

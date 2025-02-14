@@ -3,12 +3,14 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { showImage } from "../redux/slices/imageSlice";
+
 const Gallery = () => {
   const images = useSelector((state: RootState) => state.gallery.images);
   const [currentPage, setCurrentPage] = useState(1);
-  const onPageChange = (action: number) => {};
+  const dispatch = useDispatch();
   const imagesPerPage = 8;
   const total =
     images.length === 0 ? 1 : Math.ceil(images.length / imagesPerPage);
@@ -25,6 +27,10 @@ const Gallery = () => {
   const changepage = (page: number) => {
     if (page >= 1 && page <= total) setCurrentPage(page);
   };
+  const showphoto = (image: string) => {
+    dispatch(showImage(image));
+  };
+
   return (
     <div className="gallery-wrapper">
       <div className="image-wrapper">
@@ -35,6 +41,9 @@ const Gallery = () => {
               src={img}
               alt={`Gallery image ${index + firstImg}`}
               key={index}
+              onClick={() => {
+                showphoto(img);
+              }}
             />
           );
         })}
