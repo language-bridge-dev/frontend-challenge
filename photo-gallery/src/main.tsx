@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
+      {/* Front react icons for global values */}
       <IconContext.Provider value={{ className: "react-icons" }}>
         <App />
       </IconContext.Provider>

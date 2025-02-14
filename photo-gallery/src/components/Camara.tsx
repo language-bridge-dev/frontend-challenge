@@ -1,24 +1,34 @@
-import { useRef, useState } from "react";
+import { JSX, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addImageToGallery } from "../redux/slices/imageSlice";
 import Button from "./Button";
 import { RootState } from "../redux/store";
 
-const Camara = () => {
+/**
+ * Camera component that allows the user to start the camera and take photos.
+ * The captured photo is saved to the gallery in the Redux store.
+ *
+ * @returns The Camera component.
+ */
+const Camera = (): JSX.Element => {
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dispatch = useDispatch();
   const imageToShow = useSelector(
     (state: RootState) => state.gallery.imageToShow
   );
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const text = isCameraActive ? "Take Photo" : "Start Camara";
-  const dispatch = useDispatch();
-
+  /**
+   * Starts the camera by accessing the user's media devices.
+   * Sets the camera stream to the video element.
+   */
   const startCamera = async () => {
     setIsCameraActive(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
@@ -28,12 +38,16 @@ const Camara = () => {
     }
   };
 
+  /**
+   * Captures a photo from the video stream and saves it to the gallery.
+   * Draws the current frame of the video onto a canvas and dispatches the image data URL.
+   */
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context) {
-        canvasRef.current.width = videoRef.current.videoWidth;
-        canvasRef.current.height = videoRef.current.videoHeight;
+        canvasRef.current.width = videoRef.current?.videoWidth || 0;
+        canvasRef.current.height = videoRef.current?.videoHeight || 0;
         context.drawImage(
           videoRef.current,
           0,
@@ -48,9 +62,9 @@ const Camara = () => {
   };
 
   return (
-    <div className="camara">
+    <div className="camera">
       {imageToShow ? (
-        <img src={imageToShow} alt="" />
+        <img src={imageToShow} alt="Captured" />
       ) : (
         <div className="video-wrapper">
           {isCameraActive && (
@@ -65,7 +79,7 @@ const Camara = () => {
           <Button
             aria-pressed={isCameraActive}
             onClick={isCameraActive ? takePhoto : startCamera}
-            text={text}
+            text={isCameraActive ? "Take Photo" : "Start Camera"}
           />
           <canvas ref={canvasRef} style={{ display: "none" }} />
         </div>
@@ -74,4 +88,4 @@ const Camara = () => {
   );
 };
 
-export default Camara;
+export default Camera;
