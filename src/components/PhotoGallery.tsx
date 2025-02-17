@@ -59,9 +59,6 @@ const PhotoGallery = ({
             ))}
           </div>
 
-          {/* Botón para borrar todas las fotos */}
-          {/* <div className="flex justify-center mb-4"></div> */}
-
           {/* Paginación */}
           <div className="flex flex-col gap-8 justify-center items-center mt-4 absolute bottom-4 left-0 right-0">
             <div className="flex items-center">
