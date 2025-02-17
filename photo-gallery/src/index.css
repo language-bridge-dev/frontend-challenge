@@ -1,0 +1,18 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  background-color: hsl(221, 39%, 11%);
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+button {
+  border: none;
+  box-shadow: none;
+}
