@@ -1,4 +1,4 @@
-import { JSX, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addImageToGallery } from "../redux/slices/imageSlice";
 import Button from "./Button";
@@ -18,6 +18,14 @@ const Camera = (): JSX.Element => {
   const imageToShow = useSelector(
     (state: RootState) => state.gallery.imageToShow
   );
+
+  useEffect(() => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = videoRef.current.clientWidth;
+      canvas.height = videoRef.current.clientHeight;
+    }
+  }, [isCameraActive]);
 
   /**
    * Starts the camera by accessing the user's media devices.
@@ -44,21 +52,81 @@ const Camera = (): JSX.Element => {
    */
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-      if (context) {
-        canvasRef.current.width = videoRef.current?.videoWidth || 0;
-        canvasRef.current.height = videoRef.current?.videoHeight || 0;
-        context.drawImage(
+      // Create a temporary canvas to combine video and drawing
+      const tempCanvas = document.createElement("canvas");
+      const tempContext = tempCanvas.getContext("2d");
+      if (tempContext) {
+        // Set the temporary canvas dimensions to match the video
+        tempCanvas.width = videoRef.current.videoWidth;
+        tempCanvas.height = videoRef.current.videoHeight;
+
+        // draw video frame
+        tempContext.drawImage(
           videoRef.current,
           0,
           0,
-          canvasRef.current.width,
-          canvasRef.current.height
+          tempCanvas.width,
+          tempCanvas.height
         );
-        const imageUrl = canvasRef.current.toDataURL("image/png");
+
+        // draw canvas content
+        const drawingContext = canvasRef.current.getContext("2d");
+        if (drawingContext) {
+          tempContext.drawImage(
+            canvasRef.current,
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height,
+            0,
+            0,
+            tempCanvas.width,
+            tempCanvas.height
+          );
+        }
+
+        const imageUrl = tempCanvas.toDataURL("image/png");
         dispatch(addImageToGallery(imageUrl));
       }
     }
+  };
+
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(
+    null
+  );
+
+  const stopDrawing = () => setIsDrawing(false);
+
+  const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    setStartPos({ x, y });
+    setIsDrawing(true);
+  };
+
+  const drawOnCamera = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !startPos || !canvasRef.current) return;
+
+    const context = canvasRef.current.getContext("2d");
+    if (!context) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    const width = x - startPos.x;
+    const height = y - startPos.y;
+
+    context.strokeStyle = "yellow"; // Outline color
+    context.lineWidth = 3;
+    context.strokeRect(startPos.x, startPos.y, width, height);
   };
 
   return (
@@ -81,7 +149,14 @@ const Camera = (): JSX.Element => {
             onClick={isCameraActive ? takePhoto : startCamera}
             text={isCameraActive ? "Take Photo" : "Start Camera"}
           />
-          <canvas ref={canvasRef} style={{ display: "none" }} />
+          <canvas
+            ref={canvasRef}
+            style={{ display: isCameraActive ? "" : "none" }}
+            className="canvas"
+            onMouseDown={startDrawing}
+            onMouseUp={stopDrawing}
+            onMouseMove={drawOnCamera}
+          />
         </div>
       )}
     </div>
